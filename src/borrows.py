@@ -17,6 +17,17 @@ class Borrow(BaseModel):
     book_id: int
 
 
+async def borrowed(reader_id: int, book_id: int):
+    async with db.connection.execute(
+        """
+        SELECT * FROM borrows as b
+        WHERE b.reader_id = ? AND b.book_id = ?
+        """, (reader_id, book_id)
+    ) as cursor:
+        rows = await cursor.fetchall()
+        return rows
+
+
 async def reader_exists(id: int):
     async with db.connection.execute(
         """
@@ -42,7 +53,9 @@ async def book_exists(id: int):
 
   
 @router.post("/v1/borrows")
-async def add_borrow(borrow: Borrow): 
+async def add_borrow(borrow: Borrow):
+    if await borrowed(borrow.reader_id, borrow.book_id):
+        raise HTTPException(status_code=409, detail="Book is borrowed")
     # Check if reader_id exists
     if not await reader_exists(borrow.reader_id):
         raise HTTPException(status_code=404, detail="Reader with such an id doesn't exist")

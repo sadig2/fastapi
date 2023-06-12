@@ -5,7 +5,7 @@ RUN pip3 install -r /app/requirements.txt
 
 COPY src/ /app/
 
-ENTRYPOINT python -m app
+ENTRYPOINT uvicorn app.__main__:app --reload --host 0.0.0.0 --port 8000
 
 
 FROM app AS test

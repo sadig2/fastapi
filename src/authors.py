@@ -22,6 +22,7 @@ async def add_author(author: Author):
         """,
         (author.name,),
     ))[0]
+    await db.connection.commit()
     log.debug(f"Author added {author.name}")
 
     return {"author_id": author_id}

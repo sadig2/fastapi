@@ -26,18 +26,18 @@ async def initialize():
             """
             CREATE TABLE IF NOT EXISTS authors (
                 id INTEGER PRIMARY KEY,
-                name TEXT NOT NULL UNIQUE
+                name TEXT NOT NULL
             );
 
             CREATE TABLE IF NOT EXISTS books (
                 id INTEGER PRIMARY KEY,
                 author_id INTEGER NOT NULL,
-                title TEXT NOT NULL UNIQUE
+                title TEXT NOT NULL
             );
 
             CREATE TABLE IF NOT EXISTS readers (
                 id INTEGER PRIMARY KEY,
-                name TEXT NOT NULL UNIQUE
+                name TEXT NOT NULL
             );
 
             CREATE TABLE IF NOT EXISTS borrows (

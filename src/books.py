@@ -1,6 +1,6 @@
 import logging
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
 from . import db
@@ -25,6 +25,7 @@ async def add_book(book: Book):
         """,
         (book.author_id, book.title),
     ))[0]
+    await db.connection.commit()
 
     log.debug(f"Book added {book.title}")
 

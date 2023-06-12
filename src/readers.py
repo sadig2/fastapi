@@ -1,5 +1,4 @@
 import logging
-import sqlite3
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
@@ -16,19 +15,17 @@ class Reader(BaseModel):
 
 @router.post("/v1/readers")
 async def add_reader(reader: Reader):
-    try:
-        reader_id = (await db.connection.execute_insert(
-            """
-            INSERT INTO readers
-                (name)
-            VALUES (?)
-            """,
-            (reader.name,),
-        ))[0]
-        await db.connection.commit()
-        log.debug(f"Reader added {reader.name}")
-    except sqlite3.IntegrityError:
-        return HTTPException(status_code=400, detail="Item name already exists")
+    reader_id = (await db.connection.execute_insert(
+        """
+        INSERT INTO readers
+            (name)
+        VALUES (?)
+        """,
+        (reader.name,),
+    ))[0]
+    await db.connection.commit()
+    log.debug(f"Reader added {reader.name}")
+
     return {"reader_id": reader_id}
 
 

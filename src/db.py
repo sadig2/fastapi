@@ -12,8 +12,7 @@ async def initialize():
     global connection
 
     log.debug("Initializing database...")
-    print("dbbbb", f"{os.getcwd()}/app.db")
-    connection = await aiosqlite.connect(f"{os.getcwd()}/app.db")
+    connection = await aiosqlite.connect(f"{os.getcwd()}/data/app.db")
     
     # Check if tables exist before creating them
     cursor = await connection.execute(
@@ -22,9 +21,7 @@ async def initialize():
         """
     )
     existing_tables = await cursor.fetchall()
-    print("existing tables", existing_tables)
     if len(existing_tables) != 4:
-        print("never here")
         await connection.executescript(
             """
             CREATE TABLE IF NOT EXISTS authors (
